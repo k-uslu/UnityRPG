@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class Mover : MonoBehaviour
 {
     Ray lastRay;
@@ -15,6 +16,8 @@ public class Mover : MonoBehaviour
             
             MoveToCursor();
         }
+
+        updateAnimator();
         
     }
 
@@ -30,6 +33,16 @@ public class Mover : MonoBehaviour
         }
 
         Debug.DrawRay(ray.origin, ray.direction * 100);
+
+    }
+
+    private void updateAnimator()
+    {
+        Vector3 velocity = GetComponent<NavMeshAgent>().velocity;
+        Vector3 localVelocity = transform.InverseTransformDirection(velocity);
+        float speed = localVelocity.z;
+
+        GetComponent<Animator>().SetFloat("forwardSpeed",speed);
 
     }
 }
