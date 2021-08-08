@@ -3,28 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using RPG.Movement;
 
 namespace RPG.Movement
 {
     public class Mover : MonoBehaviour
     {
         Ray lastRay;
+        NavMeshAgent navMeshAgent;
+
+        void Start()
+        {
+            navMeshAgent = GetComponent<NavMeshAgent>();
+        }
 
         // Update is called once per frame
         void Update()
-        {
-            // if (Input.GetMouseButton(0)){            
-            //     MoveToCursor();
-            // }
-
-            updateAnimator();
-            
+        {       
+            updateAnimator();          
         }
 
         public void MoveTo(Vector3 dest)
         {
-            GetComponent<NavMeshAgent>().destination = dest;
+            navMeshAgent.destination = dest;
+            navMeshAgent.isStopped = false;
+        }
+
+        public void StopAgent(){
+            navMeshAgent.isStopped = true;
         }
 
         private void updateAnimator()
