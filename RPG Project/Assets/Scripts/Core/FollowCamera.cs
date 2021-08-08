@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowCamera : MonoBehaviour
+namespace RPG.Core
 {
-    [SerializeField] Transform target;
-
-    // Update is called once per frame
-    void Update()
+    public class FollowCamera : MonoBehaviour
     {
-        transform.position = target.position;
+        [SerializeField] Transform target;
+
+        // Update is called once per frame
+        void Update()
+        {
+            transform.position = target.position;
+        }
     }
+
 }
