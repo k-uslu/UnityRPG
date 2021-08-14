@@ -10,13 +10,18 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         public Transform target;
-        float attackRange_Debug = 2.0f;
-        [SerializeField] float timeBetweenAttacks = 2.0f;
-        
+        public Transform hitTarget;
+        [SerializeField] float timeBetweenAttacks = 4.0f;    
 
+        float weaponDamage = 5.0f;   
+        float attackTime;
+        float attackRange_Debug = 2.0f;
+        
         // Update is called once per frame
         void Update()
         {
+            attackTime += Time.deltaTime;
+
             if(target!=null){               
                 if(!targetInRange()){
                     GetComponent<Mover>().AttackMove(target.position);   
@@ -24,14 +29,21 @@ namespace RPG.Combat
                 }
                 else{
                     GetComponent<Mover>().Cancel();
-                    AttackBehaviour();                
+                    AttackBehaviour();                                 
                 }
             }
         }
 
         private void AttackBehaviour()
         {
-            GetComponent<Animator>().SetTrigger("attack");
+            GetComponent<Transform>().LookAt(target.position);
+            
+            if(attackTime >= timeBetweenAttacks){
+                GetComponent<Animator>().SetTrigger("attack");
+                attackTime = 0;               
+                hitTarget = target;
+                
+            }            
         }
 
         public void Attack(CombatTarget ctarget){
@@ -49,12 +61,18 @@ namespace RPG.Combat
         public void Cancel()
         {
             target = null;
-            //GetComponent<Animator>().SetTrigger("attack");
+            GetComponent<Animator>().SetTrigger("stopAttack");           
         }
 
         //Animation hit event
         public void Hit(){
-            GetComponent<Animator>().SetTrigger("stopAttack");
+            Health healthComponent = hitTarget.GetComponent<Health>();
+            healthComponent.takeDamage(weaponDamage);
+            if(hitTarget.GetComponent<Health>().isDead()){
+                Debug.Log("target died");
+                target=null;
+                GetComponent<Animator>().SetTrigger("stopAttack");
+            }
         }
     }
 }
