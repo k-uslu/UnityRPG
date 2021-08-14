@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using RPG.Core;
+
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         Ray lastRay;
         NavMeshAgent navMeshAgent;
@@ -24,12 +26,17 @@ namespace RPG.Movement
 
         public void MoveTo(Vector3 dest)
         {
+            GetComponent<ActionScheduler>().StartAction(this);  
             navMeshAgent.destination = dest;
             navMeshAgent.isStopped = false;
+                    
         }
 
-        public void StopAgent(){
-            navMeshAgent.isStopped = true;
+        public void AttackMove(Vector3 dest)
+        {
+            navMeshAgent.destination = dest;
+            navMeshAgent.isStopped = false;
+        
         }
 
         private void updateAnimator()
@@ -40,6 +47,11 @@ namespace RPG.Movement
 
             GetComponent<Animator>().SetFloat("forwardSpeed",speed);
 
+        }
+
+        public void Cancel()
+        {
+            navMeshAgent.isStopped = true;
         }
     }
 }
