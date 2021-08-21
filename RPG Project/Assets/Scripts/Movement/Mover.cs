@@ -21,6 +21,7 @@ namespace RPG.Movement
         // Update is called once per frame
         void Update()
         {       
+            if(GetComponent<Health>().isDead())navMeshAgent.enabled = false;
             updateAnimator();          
         }
 
@@ -53,5 +54,7 @@ namespace RPG.Movement
         {
             navMeshAgent.isStopped = true;
         }
+
+        
     }
 }

@@ -11,7 +11,7 @@ namespace RPG.Combat
     {
         public Transform target;
         public Transform hitTarget;
-        [SerializeField] float timeBetweenAttacks = 4.0f;    
+        [SerializeField] float timeBetweenAttacks = 1.5f;    
 
         float weaponDamage = 5.0f;   
         float attackTime;
@@ -47,8 +47,8 @@ namespace RPG.Combat
             }            
         }
 
-        public void Attack(CombatTarget ctarget){
-            GetComponent<ActionScheduler>().StartAction(this);
+        public void Attack(GameObject ctarget){
+            if(GetComponent<ActionScheduler>()!=null)GetComponent<ActionScheduler>().StartAction(this);    
             target = ctarget.transform;           
         }
 
@@ -59,7 +59,7 @@ namespace RPG.Combat
             return false;
         }
 
-        public bool canAttack(CombatTarget target){
+        public bool canAttack(GameObject target){
             if(target!=null && !target.GetComponent<Health>().isDead()){
                 return true;
             }
@@ -82,7 +82,7 @@ namespace RPG.Combat
             healthComponent.takeDamage(weaponDamage);
             
             if(hitTarget.GetComponent<Health>().isDead()){
-                Debug.Log("target died");                   
+                //Debug.Log("target died");                   
                 GetComponent<Animator>().SetTrigger("stopAttack");
                 target=null;
             }

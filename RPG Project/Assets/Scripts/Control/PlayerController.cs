@@ -4,6 +4,7 @@ using UnityEngine;
 using RPG.Movement;
 using System;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
@@ -13,21 +14,24 @@ namespace RPG.Control
         // Update is called once per frame
         void Update()
         {
-            Debug.DrawRay(GetMouseRay().origin, GetMouseRay().direction * 100);
+            if(!GetComponent<Health>().isDead()){
 
-            if (CombatInteraction())
-            {
-                //Debug.Log("combatint");
-                return;
+                Debug.DrawRay(GetMouseRay().origin, GetMouseRay().direction * 100);
+
+                if (CombatInteraction())
+                {
+                    //debug.Log("combatint");
+                    return;
+                }
+
+                else if (MovementInteraction())
+                {
+                    //debug.Log("movementint");
+                    return;
+                }
+
+                //debug.Log("Nothing to do.");
             }
-
-            else if (MovementInteraction())
-            {
-                //Debug.Log("movementint");
-                return;
-            }
-
-            Debug.Log("Nothing to do.");
         }
 
         private bool CombatInteraction()
@@ -35,11 +39,13 @@ namespace RPG.Control
             RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
             foreach (var hit in hits)
             {
-                if (GetComponent<Fighter>().canAttack(hit.transform.GetComponent<CombatTarget>()))
+                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
+                if (target==null) continue;
+                if(GetComponent<Fighter>().canAttack(target.gameObject))
                 {
                     if (Input.GetMouseButtonDown(0))
                     { 
-                            gameObject.GetComponent<Fighter>().Attack(hit.transform.gameObject.GetComponent<CombatTarget>());                                            
+                            gameObject.GetComponent<Fighter>().Attack(hit.transform.gameObject);                                            
                     }
                     return true;
                 }

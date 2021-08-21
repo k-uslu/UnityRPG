@@ -12,10 +12,15 @@ namespace RPG.Core{
             if(currentAction == action) return;
             if(currentAction!=null){
                 currentAction.Cancel();
-                Debug.Log("Cancelled "+currentAction);
+                //Debug.Log("Cancelled "+currentAction);
             }          
             currentAction = action;
-            Debug.Log("new Act: "+currentAction);
+            //Debug.Log("new Act: "+currentAction);
+        }
+
+        public void CancelAll(){
+            currentAction.Cancel();
+            currentAction=null;
         }
     }
 }
